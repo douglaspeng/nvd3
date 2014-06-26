@@ -5412,6 +5412,7 @@ nv.models.lineChart = function() {
     , width = null
     , height = null
     , showLegend = true
+    , invisibleLegend = false
     , showXAxis = true
     , showYAxis = true
     , rightAlignYAxis = false
@@ -5543,12 +5544,22 @@ nv.models.lineChart = function() {
       if (showLegend) {
         legend.width(availableWidth);
 
-        g.select('.nv-legendWrap')
+        if (invisibleLegend) {
+          g.select('.nv-legendWrap')
+            .attr('style','display:none')
             .datum(data)
             .call(legend);
+        }
+        else {
+          g.select('.nv-legendWrap')
+            .datum(data)
+            .call(legend);
+        }
 
         if ( margin.top != legend.height()) {
-          margin.top = legend.height();
+          if (invisibleLegend != true){
+            margin.top = legend.height();
+          }
           availableHeight = (height || parseInt(container.style('height')) || 400)
                              - margin.top - margin.bottom;
         }
@@ -5852,6 +5863,12 @@ nv.models.lineChart = function() {
   chart.transitionDuration = function(_) {
     if (!arguments.length) return transitionDuration;
     transitionDuration = _;
+    return chart;
+  };
+
+  chart.invisibleLegend = function(_) {
+    if (!arguments.length) return invisibleLegend;
+    invisibleLegend = _;
     return chart;
   };
 
